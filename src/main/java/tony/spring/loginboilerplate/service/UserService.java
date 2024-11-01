@@ -5,7 +5,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import tony.spring.loginboilerplate.domain.User;
 import tony.spring.loginboilerplate.domain.dto.request.AddUserRequest;
+import tony.spring.loginboilerplate.exception.AuthException;
+import tony.spring.loginboilerplate.exception.ErrorCode;
 import tony.spring.loginboilerplate.repository.UserRepository;
+
+import static tony.spring.loginboilerplate.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -21,5 +25,9 @@ public class UserService {
                 .build();
 
         return userRepository.save(user).getId();
+    }
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(()-> new AuthException(NOT_FOUND_USER));
     }
 }
